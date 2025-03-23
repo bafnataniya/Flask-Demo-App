@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .stopwatch-container {
+            text-align: center;
+        }
+        .time {
+            font-size: 48px;
+            margin: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .start, .stop {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .reset {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="stopwatch-container">
+        <div class="time" id="timeDisplay">00:00</div>
+        <button class="button start" id="startButton">Start</button>
+        <button class="button stop" id="stopButton" disabled>Stop</button>
+        <button class="button reset" id="resetButton">Reset</button>
+    </div>
+
+    <script>
+        let startButton = document.getElementById('startButton');
+        let stopButton = document.getElementById('stopButton');
+        let resetButton = document.getElementById('resetButton');
+        let timeDisplay = document.getElementById('timeDisplay');
+
+        let timer;
+        let seconds = 0;
+        let isRunning = false;
+
+        function formatTime(sec) {
+            let minutes = Math.floor(sec / 60);
+            let seconds = sec % 60;
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function startTimer() {
+            timer = setInterval(function() {
+                seconds++;
+                timeDisplay.textContent = formatTime(seconds);
+            }, 1000);
+        }
+
+        startButton.addEventListener('click', function() {
+            if (!isRunning) {
+                isRunning = true;
+                startButton.textContent = 'Pause';
+                stopButton.disabled = false;
+                startTimer();
+            } else {
+                clearInterval(timer);
+                isRunning = false;
+                startButton.textContent = 'Resume';
+            }
+        });
+
+        stopButton.addEventListener('click', function() {
+            clearInterval(timer);
+            isRunning = false;
+            startButton.textContent = 'Resume';
+            stopButton.disabled = true;
+        });
+
+        resetButton.addEventListener('click', function() {
+            clearInterval(timer);
+            isRunning = false;
+            seconds = 0;
+            timeDisplay.textContent = formatTime(seconds);
+            startButton.textContent = 'Start';
+            stopButton.disabled = true;
+        });
+    </script>
+</body>
+</html>
